@@ -46,17 +46,17 @@ RSpec.describe "with users and roles" do
 
   #Adding index page
 
-  describe "index page" do
-    let!(:my_project) { create(:project, name: "My Project") }
-    let!(:not_my_project) { create(:project, name: "Not My Project") }
+    describe "index page" do
+        let!(:my_project) { create(:project, name: "My Project") }
+        let!(:not_my_project) { create(:project, name: "Not My Project") }
     
-    it "allows users to see only projects that are visible" do
-        my_project.roles.create(user: user)
-        login_as(user)
-        visit(projects_path)
-        expect(page).to have_selector("#project_#{my_project.id}")
-        expect(page).not_to have_selector("#project_#{not_my_project.id}")
+        it "allows users to see only projects that are visible" do
+            my_project.roles.create(user: user)
+            login_as(user)
+            visit(projects_path)
+            expect(page).to have_selector("#project_#{my_project.id}")
+            expect(page).not_to have_selector("#project_#{not_my_project.id}")
+        end
     end
-end
 
 end

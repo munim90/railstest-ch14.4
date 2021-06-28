@@ -11,6 +11,10 @@ class Project < ApplicationRecord
 
   validates :name, presence: true
 
+  def self.all_public
+    where(public: true)
+  end
+
   def self.velocity_length_in_days
     21
   end
@@ -49,10 +53,9 @@ class Project < ApplicationRecord
     (Time.zone.today + projected_days_remaining) <= due_date  
   end
 
-  # #START: next_task_order
   def next_task_order
     return 1 if tasks.empty?
     (tasks.last.project_order || tasks.size) + 1
   end
-  # #END: next_task_order
+
 end

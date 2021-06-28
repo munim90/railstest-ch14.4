@@ -5,6 +5,7 @@ RSpec.describe CreatesProject do
   let(:creator) { CreatesProject.new(
     name: "Project Runway", task_string: task_string) }
 
+    
   describe "initialization" do
     let(:task_string) { "" }
     it "creates a project given a name" do
@@ -12,8 +13,6 @@ RSpec.describe CreatesProject do
       expect(creator.project.name).to eq("Project Runway")
     end
   end
-
-  ## START: failure_test
 
   describe "failure cases" do
     it "fails when trying to save a project with no name" do
@@ -23,9 +22,6 @@ RSpec.describe CreatesProject do
     end
   end
 
-  ## END: failure_test
-
-  ## START: mock_failure
   describe "mocking a failure" do
     it "fails when we say it fails" do
       project = instance_spy(Project, save: false)
@@ -35,7 +31,6 @@ RSpec.describe CreatesProject do
       expect(creator).not_to be_a_success
     end
   end
-  ## END: mock_failure
 
   describe "task string parsing" do
     let(:tasks) { creator.convert_string_to_tasks }
@@ -96,6 +91,13 @@ RSpec.describe CreatesProject do
       specify { expect(creator.project.tasks.size).to eq(2) }
       specify { expect(creator.project).not_to be_a_new_record }
     end
+  end
+
+  it "adds users to the project" do
+    user = create(:user)
+    creator = CreatesProject.new(name: "Project Runway", users: [user])
+    creator.build
+    expect(creator.project.users).to eq([user])
   end
 
 end

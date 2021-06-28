@@ -1,7 +1,19 @@
 class TasksController < ApplicationController
   before_action :load_task, only: %i[up down]
+
+  #
+  def create
+    @project = Project.find(params[:task][:project_id])
+    unless current_user.can_view?(@project)
+      redirect_to new_user_session_path
+      return
+    end
+    @project.tasks.create(
+      task_params.merge(project_order: @project.next_task_order))
+    redirect_to(@project)
+  end
+  #
   
-  #START: new update
   def update
     @task = Task.find(params[:id])
     completed = params[:task][:completed] == "true" && !@task.complete?
@@ -12,14 +24,6 @@ class TasksController < ApplicationController
     else
       render action :edit
     end
-  end
-  #END: new update
-
-  def create
-    @project = Project.find(params[:task][:project_id])
-    @project.tasks.create(
-      task_params.merge(project_order: @project.next_task_order))
-    redirect_to(@project)
   end
 
   def up
